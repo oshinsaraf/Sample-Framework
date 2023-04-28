@@ -6,6 +6,8 @@ import Header from '@/components/header';
 
 export default function FoodieHomePage() {
 
+    // const isLaptop = window.innerWidth >= 1024;
+
     return (
         <>
             <Head>
@@ -13,7 +15,7 @@ export default function FoodieHomePage() {
             </Head>
             <Header />
             <div
-                className="flex flex-col items-center justify-center min-h-screen"
+                className="flex mx-auto flex-col  items-center justify-center min-h-screen "
             >
                 <div className='flex flex-col items-center justify-center min-h-screen bg-black '>
                     <h1
