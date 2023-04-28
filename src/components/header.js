@@ -26,8 +26,12 @@ const Header = () => {
         setMenuOpen(!menuOpen);
     };
 
+    const handleClick = () => {
+        window.open(user.photoURL, "_blank");
+      };
+      
     return (
-        <nav className="bg-black shadow-lg py-4">
+        <nav className="bg-black shadow-lg">
             <div className="hidden sm:block sm:ml-6">
                 <div className="flex space-x-8 ">
                     <Link href="/home" passHref>
@@ -73,13 +77,21 @@ const Header = () => {
                             </p>
                         </Link>
                     }
+                    {/* {user &&
+                        <img
+                            className="rounded-full h-8 w-8  border cursor-pointer float-right border-white mb-4"
+                            src={user.photoURL}
+                            alt="Profile picture"
+                            onClick={handleClick}
+                        />
+                    } */}
                 </div>
             </div>
             {/* Mobile menu button */}
             <div className="-mr-2 flex sm:hidden">
                 <button
                     type="button"
-                    className="bg-[#FBBF24] inline-flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                    className="bg-black inline-flex items-center justify-center p-2 rounded-md text-[#FBBF24] hover:text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                     aria-expanded={menuOpen}
                     onClick={handleMenuToggle}
                 >

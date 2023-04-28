@@ -5,37 +5,24 @@ import Link from "next/link";
 import Header from '@/components/header';
 
 export default function FoodieHomePage() {
-
-    // const isLaptop = window.innerWidth >= 1024;
-
     return (
         <>
             <Head>
-                <title>Delivro - Home</title>
+                <title>Home</title>
             </Head>
             <Header />
-            <div
-                className="flex mx-auto flex-col  items-center justify-center min-h-screen "
-            >
-                <div className='flex flex-col items-center justify-center min-h-screen bg-black '>
-                    <h1
-                        className="text-5xl text-white mx-auto font-bold mb-8"
-                    >
-                        Welcome to Deliviro!
+            <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+                <div className="flex flex-col items-center justify-center text-center px-4 py-8 lg:p-0">
+                    <h1 className="text-4xl lg:text-5xl text-white font-bold mb-4">
+                        Welcome to our Website!
                     </h1>
-                    <p
-                        className="text-xl text-white text-center mb-8"
-                    >
-                        Order delicious meals from your favorite restaurants and have them delivered right to your doorstep. Browse through our menu to find the perfect meal for you.
+                    <p className="text-lg lg:text-xl text-white mb-8">
+                        Buy or Sell your Airpods Here!
                     </p>
-                    <div
-                        className="flex justify-center"
-                    >
-                        <Link href='/order'>
-                            <button
-                                className="bg-white text-gray-600 py-3 px-6 rounded-full shadow-lg transition duration-1000 hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-300"
-                            >
-                                View Menu
+                    <div className="flex justify-center">
+                        <Link href="/dashboard">
+                            <button className="bg-white text-gray-600 py-3 px-6 rounded-full shadow-lg transition duration-1000 hover:bg-yellow-600 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-300">
+                                Buy/sell
                             </button>
                         </Link>
                     </div>

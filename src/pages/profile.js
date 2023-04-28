@@ -5,6 +5,7 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect } from 'react'
 import Header from '@/components/header';
+import Head from "next/head";
 
 export default function Profile() {
   const [user, setUser] = useAuthState(auth);
@@ -29,20 +30,29 @@ export default function Profile() {
 
   return (
     <>
+      <Head>
+        <title>Profile</title>
+      </Head>
       <Header />
-      <div className="flex items-center justify-between py-4 px-8 min-h-screen bg-black">
+      <div className="py-4 px-8 min-h-screen bg-black">
         {user && (
-          <div className="border border-white text-white shadow-lg rounded-3xl mx-auto p-24 bg-black flex flex-col">
+          <div className="border border-white text-white shadow-lg rounded-3xl mx-auto p-4 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <img
-              className="rounded-full h-24 w-24 mx-auto border cursor-pointer border-white mb-4"
+              className="rounded-full h-24 w-24 sm:h-16 sm:w-16 mx-auto border cursor-pointer border-white mb-4"
               src={user.photoURL}
               alt="Profile picture"
               onClick={handleClick}
             />
-            <p className="mb-2 mx-auto text-3xl font-bold font-mono">Name: <span className="text-xl text-gray-300">{user.displayName}</span></p>
-            <p className="mb-2 mx-auto text-3xl font-bold font-mono">Email:<span className="text-xl text-gray-300"> {user.email}</span></p>
+            <div className="text-center sm:text-left">
+              <p className="mb-2  font-bold font-mono text-lg sm:text-3xl">Name: <span className="text-xl text-gray-300">{user.displayName}</span></p>
+              <p className="mb-2  font-bold font-mono text-lg sm:text-3xl">Email:<span className="text-xl text-gray-300"> {user.email}</span></p>
+            </div>
           </div>
         )}
+        <div className="border border-white flex ">
+            <input type = 'text' placeholder="Enter Your Number"/>
+            <input type = 'text' placeholder = "Enter Your Address" />
+        </div>
       </div>
     </>
   );

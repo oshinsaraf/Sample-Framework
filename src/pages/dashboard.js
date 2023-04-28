@@ -12,7 +12,7 @@ export default function Dashboard() {
             </Link>
 
 
-            <Link href='/Sell' className=" w-1/3 p-20  flex justify-center items-center border border mx-auto border-white shadow-md">
+            <Link href='/sell' className=" w-1/3 p-20  flex justify-center items-center border border mx-auto border-white shadow-md">
                 Sell
             </Link>
 
