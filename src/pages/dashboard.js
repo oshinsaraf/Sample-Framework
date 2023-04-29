@@ -2,51 +2,34 @@ import React from "react";
 import Header from "@/components/header";
 import Link from "next/link";
 import { useState } from "react";
+import { auth } from '../pages/firebase'
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useEffect } from 'react'
 
-const CustomLink = React.forwardRef(({ href, onClick, children }, ref) => {
-  return (
-    <div
-      className="w-60 rounded-lg m-4 md:m-10 p-4 md:p-20 border mx-auto flex justify-center items-center border-white shadow-md cursor-pointer text-white hover:bg-yellow-600 hover:translate-y-1 transition delay-150 hover:text-white"
-      onClick={onClick}
-      ref={ref}
-    >
-      {children}
-    </div>
-  );
-});
 
 export default function Dashboard() {
-  const [hoveredButton, setHoveredButton] = useState(null);
 
   return (
     <>
       <Header />
-      <div className="bg-black font-xl gap-5 md:gap-20 mx-auto min-h-screen flex flex-col items-center text-white justify-center font-bold font-mono text-5xl md:text-7xl">
+      <div className="bg-black font-xl gap-5 md:gap-20 mx-auto min-h-screen flex flex-col md:flex-row items-center text-white justify-center font-bold font-mono text-5xl md:text-7xl"
+        style={{
+          backgroundImage: `url('/1.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          opacity: '40%',
+        }}
+      >
         <Link href="/buy" passHref>
-          <CustomLink
-            onMouseEnter={() => setHoveredButton("buy")}
-            onMouseLeave={() => setHoveredButton(null)}
-            className={
-              hoveredButton === "buy"
-                ? "bg-white text-black"
-                : "text-white border"
-            }
-          >
+          <p className="block text-center font-bold md:inline-block md:text-left md:mr-10 md:mb-0 mb-5 text-white border border-yellow-500 text-4xl md:text-5xl p-20 hover:bg-yellow-500 shadow-sm rounded-sm hover:text-white transition duration-500 uppercase tracking-widest">
             Buy
-          </CustomLink>
+          </p>
         </Link>
         <Link href="/sell" passHref>
-          <CustomLink
-            onMouseEnter={() => setHoveredButton("sell")}
-            onMouseLeave={() => setHoveredButton(null)}
-            className={
-              hoveredButton === "sell"
-                ? "bg-white text-black"
-                : "text-white border"
-            }
-          >
+          <p className="block text-center font-bold md:inline-block md:text-left md:mr-10 md:mb-0 mb-5 text-white border border-yellow-500 text-4xl md:text-5xl p-20 hover:bg-yellow-500 shadow-sm rounded-sm hover:text-white transition duration-500 uppercase tracking-widest">
             Sell
-          </CustomLink>
+          </p>
         </Link>
       </div>
     </>

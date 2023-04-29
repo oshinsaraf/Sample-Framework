@@ -4,6 +4,8 @@ import { auth, db } from './firebase';
 import { ref, push, set, onValue } from 'firebase/database';
 import Header from '@/components/header';
 import Head from 'next/head';
+import firebase from 'firebase/app';
+import 'firebase/storage';
 
 const Sell = () => {
     const [title, setTitle] = useState('');
@@ -15,23 +17,24 @@ const Sell = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
-  
+    const [image, setImage] = useState(null);
 
-  
+
     const handlePopupSubmit = (event) => {
-      event.preventDefault();
-      // code to handle form submission goes here
-      console.log(`Title: ${title}`);
-      console.log(`Description: ${description}`);
-      console.log(`Price: ${price}`);
-      console.log(`File: ${file}`);
-      console.log(`Address: ${address}`);
-      console.log(`Phone: ${phone}`);
+        event.preventDefault();
+        // code to handle form submission goes here
+        console.log(`Title: ${title}`);
+        console.log(`Description: ${description}`);
+        console.log(`Price: ${price}`);
+        console.log(`File: ${file}`);
+        console.log(`Address: ${address}`);
+        console.log(`Phone: ${phone}`);
+
+        setShowPopup(false);
+        alert("Succesfully Uploaded");
     };
-  
-    const handleFileChange = (event) => {
-      setFile(event.target.files[0]);
-    };
+
+
     useEffect(() => {
         if (!user) {
             return;
@@ -83,7 +86,25 @@ const Sell = () => {
 
         event.preventDefault();
         setShowPopup(true);
+
     };
+
+
+    const handleFileChange = (e) => {
+      if (e.target.files[0]) {
+        setImage(e.target.files[0]);
+      }
+    };
+  
+    const handleUpload = () => {
+      const storageRef = firebase.storage().ref();
+      const imageName = uuidv4();
+      const imageRef = storageRef.child(`images/${imageName}`);
+      imageRef.put(image).then(() => {
+        console.log('Image uploaded successfully');
+      });
+    };
+
 
 
     return (
@@ -164,13 +185,8 @@ const Sell = () => {
                         </div>
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="file" className="block text-yellow-500 font-medium mb-2">
-                            Upload Files
-                        </label>
-                        <input
-                            type="file" id="file"
-                            onChange={handleFileChange}
-                        />
+                        <input type="file" onChange={handleFileChange} />
+                        <button onClick={handleUpload}>Upload</button>
                     </div>
                     <button
 
@@ -182,29 +198,8 @@ const Sell = () => {
                 {showPopup && (
                     <div className="fixed top-0 left-0 h-full w-full flex justify-center items-center bg-black bg-opacity-50">
                         <form onSubmit={handlePopupSubmit} className="bg-yellow-500 rounded-lg p-6">
-                            <h2 className="text-2xl font-bold mb-4">Confirm Details</h2>
-                            <p className="mb-4">Please confirm the following details:</p>
-                            <ul className="list-disc list-inside mb-4">
-                                <li>
-                                    <strong>Title:</strong> {title}
-                                </li>
-                                <li>
-                                    <strong>Description:</strong> {description}
-                                </li>
-                                <li>
-                                    <strong>Price:</strong> {price}
-                                </li>
-                                <li>
-                                    <strong>File:</strong> {file ? file.name : 'No file selected'}
-                                </li>
-                                <li>
-                                    <strong>Address:</strong> {address}
-                                </li>
-                                <li>
-                                    <strong>Phone:</strong> {phone}
-                                </li>
-                            </ul>
-                            <div className="flex justify-between">
+                            <p className="mb-4">Please confirm </p>
+                            <div className="flex justify-between gap-3">
                                 <button
                                     type="button"
                                     className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
@@ -212,7 +207,7 @@ const Sell = () => {
                                 >
                                     Cancel
                                 </button>
-                                <button type="submit" className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+                                <button type="submit" className="px-4 py-2 ml-2 bg-black text-white rounded-md hover:bg-gray-800">
                                     Confirm
                                 </button>
                             </div>
