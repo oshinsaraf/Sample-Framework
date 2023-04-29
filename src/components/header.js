@@ -31,7 +31,7 @@ const Header = () => {
       };
       
     return (
-        <nav className="bg-black shadow-lg">
+        <nav className="bg-black shadow-lg py-4 ">
             <div className="hidden sm:block sm:ml-6">
                 <div className="flex space-x-8 ">
                     <Link href="/home" passHref>
@@ -91,7 +91,7 @@ const Header = () => {
             <div className="-mr-2 flex sm:hidden">
                 <button
                     type="button"
-                    className="bg-black inline-flex items-center justify-center p-2 rounded-md text-[#FBBF24] hover:text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                    className="bg-black inline-flex items-center justify-center p-2 rounded-md text-[#FBBF24] hover:text-white  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                     aria-expanded={menuOpen}
                     onClick={handleMenuToggle}
                 >

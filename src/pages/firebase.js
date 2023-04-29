@@ -3,18 +3,20 @@ import { getDatabase } from "firebase/database";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBq2U5wEDnSlP3mRkaRFqiGhIg4HZeNvZ4",
-  authDomain: "ingenious-c6d53.firebaseapp.com",
-  projectId: "ingenious-c6d53",
-  storageBucket: "ingenious-c6d53.appspot.com",
-  messagingSenderId: "281207934871",
-  appId: "1:281207934871:web:748b5496f2888b98a5fed2"
-};
-
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID
+  };
+  
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 const user = auth.currentUser;
 const googleAuth = new GoogleAuthProvider();
+
 
 export { app, auth, db, googleAuth };
