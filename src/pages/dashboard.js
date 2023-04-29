@@ -10,6 +10,35 @@ import { useEffect } from 'react'
 
 export default function Dashboard() {
 
+  const [user, setUser] = useAuthState(auth);
+  const googleAuth = new GoogleAuthProvider();
+  const login = async () => {
+    const results = await signInWithPopup(auth, googleAuth);
+    const { user } = results;
+    const userInfo = {
+      name: user.displayName,
+      email: user.email
+    }
+  }
+  useEffect(() => {
+    console.log(user);
+  }, [user])
+
+  if (!user) {
+
+    return (
+      <div className="min-h-screen bg-black font-bold text-yellow-500 text-4xl mx-auto flex items-center justify-center ">
+        Please Login Before Accessing this page
+        <Link href = '/home' className="bg-yellow-500 mx-auto hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" >
+          Home
+        </Link>
+      </div>
+      
+    );
+   
+  }
+
+
   return (
     <>
       <Header />
@@ -22,12 +51,12 @@ export default function Dashboard() {
         }}
       >
         <Link href="/buy" passHref>
-          <p className="block text-center font-bold md:inline-block md:text-left md:mr-10 md:mb-0 mb-5 text-white border border-yellow-500 text-4xl md:text-5xl p-20 hover:bg-yellow-500 shadow-sm rounded-sm hover:text-white transition duration-500 uppercase tracking-widest">
+          <p className="block text-center font-bold md:inline-block md:text-left md:mr-10 md:mb-0 mb-5 text-white border border-yellow-700 text-4xl md:text-5xl p-20 hover:bg-yellow-500 shadow-sm rounded-sm hover:text-white transition duration-500 uppercase tracking-widest">
             Buy
           </p>
         </Link>
         <Link href="/sell" passHref>
-          <p className="block text-center font-bold md:inline-block md:text-left md:mr-10 md:mb-0 mb-5 text-white border border-yellow-500 text-4xl md:text-5xl p-20 hover:bg-yellow-500 shadow-sm rounded-sm hover:text-white transition duration-500 uppercase tracking-widest">
+          <p className="block text-center font-bold md:inline-block md:text-left md:mr-10 md:mb-0 mb-5 text-white border border-yellow-700 text-4xl md:text-5xl p-20 hover:bg-yellow-500 shadow-sm rounded-sm hover:text-white transition duration-500 uppercase tracking-widest">
             Sell
           </p>
         </Link>

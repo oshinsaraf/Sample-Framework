@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from './firebase';
-import { ref, push, set, onValue } from 'firebase/database';
+import { ref, push, set, onValue, update } from 'firebase/database';
 import Header from '@/components/header';
 import Head from 'next/head';
 import firebase from 'firebase/app';
 import 'firebase/storage';
+import { getDatabase } from 'firebase/database';
+import { firebaseApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import SoldBy from '@/components/seller';
 
 const Sell = () => {
     const [title, setTitle] = useState('');
@@ -69,7 +73,7 @@ const Sell = () => {
             price,
             address,
             phone,
-            cartItemKey: null
+            cartItemKey: null,
         };
 
         const sellItemsRef = ref(db, `users/${currentUser.uid}/sellItems`);
@@ -91,20 +95,89 @@ const Sell = () => {
 
 
     const handleFileChange = (e) => {
-      if (e.target.files[0]) {
-        setImage(e.target.files[0]);
-      }
-    };
-  
-    const handleUpload = () => {
-      const storageRef = firebase.storage().ref();
-      const imageName = uuidv4();
-      const imageRef = storageRef.child(`images/${imageName}`);
-      imageRef.put(image).then(() => {
-        console.log('Image uploaded successfully');
-      });
+        if (e.target.files[0]) {
+            setImage(e.target.files[0]);
+        }
     };
 
+    const handleUpload = () => {
+        const storageRef = firebase.storage().ref();
+        const imageName = uuidv4();
+        const imageRef = storageRef.child(`images/${imageName}`);
+        imageRef.put(image).then(() => {
+            console.log('Image uploaded successfully');
+        });
+    };
+
+    const handleConfirm = async (item) => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+
+        fileInput.addEventListener("change", async () => {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.addEventListener("load", async () => {
+                const base64Image = reader.result.replace(/^data:image\/[a-z]+;base64,/, "");
+                const db = getDatabase(firebaseApp);
+                const auth = getAuth(firebaseApp);
+                const user = auth.currentUser;
+
+                if (!user) {
+                    // User not authenticated
+                    return;
+                }
+
+                const cartItemRef = ref(db, `users/${user.uid}/cartItems`);
+                const newCartItemRef = push(cartItemRef);
+                const newCartItemKey = newCartItemRef.key;
+                const currentUser = auth.currentUser;
+
+                const newCartItem = {
+
+                    imageUrl: base64Image, // add base64-encoded image here
+                };
+
+                const sellItemsRef = ref(db, `users/${currentUser.uid}/sellItems`);
+                push(sellItemsRef, newCartItem);
+            });
+
+            reader.readAsDataURL(file);
+        });
+
+        fileInput.click();
+    };
+
+
+    if (!user) {
+
+        return (
+            <div className="min-h-screen bg-black font-bold text-yellow-500 text-4xl mx-auto flex items-center justify-center ">
+                Please Login Before Accessing this page
+                <Link href='/home' className="bg-yellow-500 mx-auto hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" >
+                    Home
+                </Link>
+            </div>
+
+        );
+
+    }
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          var currentUserEmail = user.email;
+          var soldByRef = firebase.database().ref('bought/' + user.uid + '/soldBy');
+      
+          soldByRef.once('value').then(function(snapshot) {
+            var soldByEmail = snapshot.val();
+            if (currentUserEmail === soldByEmail) {
+              console.log('It has been sold.');
+            }
+          });
+        }
+      });
+      
 
 
     return (
@@ -123,7 +196,7 @@ const Sell = () => {
                             value={title}
                             onChange={(event) => setTitle(event.target.value)}
                             required
-                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-blue-500 bg-transparent"
+                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-white bg-transparent"
                         />
                     </div>
                     <div className="mb-4">
@@ -136,12 +209,12 @@ const Sell = () => {
                             value={phone}
                             onChange={(event) => setPhone(event.target.value)}
                             required
-                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-blue-500 bg-transparent"
+                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-white bg-transparent"
                         />
                     </div>
                     <div className="mb-4">
                         <label htmlFor="address" className="block text-yellow-500 font-medium mb-2">
-                            Address
+                            City
                         </label>
                         <input
                             type="text"
@@ -149,7 +222,7 @@ const Sell = () => {
                             value={address}
                             onChange={(event) => setAddress(event.target.value)}
                             required
-                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-blue-500 bg-transparent"
+                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-white bg-transparent"
                         />
                     </div>
                     <div className="mb-4">
@@ -161,7 +234,7 @@ const Sell = () => {
                             value={description}
                             onChange={(event) => setDescription(event.target.value)}
                             required
-                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-blue-500 bg-transparent"
+                            className="w-full border-yellow-500 border-2 rounded-md py-2 px-3 text-white leading-5 focus:outline-none focus:border-white bg-transparent"
                         ></textarea>
                     </div>
                     <div className="mb-4">
@@ -178,18 +251,17 @@ const Sell = () => {
                                 value={price}
                                 onChange={(event) => setPrice(event.target.value)}
                                 required
-                                className="block w-full pr-12 border-yellow-500 border-2 rounded-md pl-8 py-2 px-3 text-white leading-5 focus:outline-none focus:border-blue-500 bg-transparent"
+                                className="block w-full pr-12 border-yellow-500 border-2 rounded-md pl-8 py-2 px-3 text-white leading-5 focus:outline-none focus:border-white bg-transparent"
                                 placeholder="0.00"
                                 step="0.01"
                             />
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <input type="file" onChange={handleFileChange} />
-                        <button onClick={handleUpload}>Upload</button>
-                    </div>
-                    <button
+                    {/* <div className="mb-4">
 
+                        <button onClick={handleConfirm}>Upload Image</button>
+                    </div> */}
+                    <button
                         className="px-4 py-2 bg-yellow-500 text-black rounded-md hover:bg-yellow-600"
                     >
                         Sell
@@ -212,7 +284,10 @@ const Sell = () => {
                                 </button>
                             </div>
                         </form>
+
+                            <SoldBy />
                     </div>
+
                 )}
             </div>
         </>
